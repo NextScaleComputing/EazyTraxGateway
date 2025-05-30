@@ -1,0 +1,54 @@
+
+################################# Build and push the latest image
+
+
+docker build --no-cache --platform linux/arm64 -t eazytrax-app .
+docker tag eazytrax-app bitengine/eazytrax-app:latest
+docker push bitengine/eazytrax-app:latest
+
+
+################################# Pull and run the latest image
+docker stop eazytrax-app
+docker rm eazytrax-app -f
+
+docker run --privileged  \
+  --network host  \
+  --pull always \
+  --restart always  \
+  -v /var/run/dbus:/var/run/dbus \
+  -v /sys/class/thermal/thermal_zone0:/sys/class/thermal/thermal_zone0:ro \
+  -e "PROXY=https://tec.eazytrax.com/Collector/EazyTrax/v2" \
+  -e HOSTNAME="$(hostname)" \
+  -e "TOKEN=token1213" \
+  --name eazytrax-app  \
+  -d bitengine/eazytrax-app:0.7 
+  
+
+docker rm eazytrax-app -f
+
+  docker run --privileged  \
+  --network host  \
+  --pull always  \
+  --restart always  \
+  -v /var/run/dbus:/var/run/dbus \
+  -e "PROXY=https://itsc.eazytrax.com/Collector/EazyTrax/v2" \
+  -e HOSTNAME="$(hostname)" \
+  -e "TOKEN=token1213" \
+  --name eazytrax-app  \
+  -d bitengine/eazytrax-app:0.5
+
+
+
+
+
+################################# Pull and run the latest image
+docker stop eazytrax-app
+docker rm eazytrax-app
+docker run --privileged  \
+  --network host  \
+  --pull always  \
+  --restart always  \
+  -v /var/run/dbus:/var/run/dbus \
+  -e "PROXY=http://lab01.eazytrax.com/Collector/EazyTrax/v2" \
+  --name eazytrax-app  \
+  -it bitengine/eazytrax-app:latest
