@@ -1,0 +1,10 @@
+pandas
+requests
+netifaces
+bleak
+flask
+pyyaml
+python-dotenv
+psutil
+paho-mqtt
+netifaces
