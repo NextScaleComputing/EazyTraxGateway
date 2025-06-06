@@ -51,7 +51,7 @@ def get_payload():
     payLoad = prepare_payload()
     return jsonify(payLoad)
 
-@app.route("/api/token", methods=["GET"])
+@app.route("/api/Telemetry/Gateway/token", methods=["GET"])
 def get_token():
     """API endpoint to get a new bearer token based on the device MAC address"""
     global gateway_mac
@@ -80,7 +80,7 @@ def get_token():
         "expires_in": auth.TOKEN_EXPIRY
     })
 
-@app.route("/api/hostname", methods=["GET"])
+@app.route("/api/Telemetry/Gateway/hostname", methods=["GET"])
 @auth.token_required
 def get_hostname():
     """API endpoint to get the current hostname (requires authentication)"""
@@ -89,7 +89,7 @@ def get_hostname():
         "success": True
     })
 
-@app.route("/api/hostname", methods=["POST"])
+@app.route("/api/Telemetry/Gateway/hostname/update", methods=["POST"])
 @auth.token_required
 def set_hostname():
     """API endpoint to change the hostname (requires authentication)"""
