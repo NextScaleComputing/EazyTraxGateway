@@ -300,12 +300,12 @@ async def main():
     # Set the MAC address in the auth module to use it as SECRET_KEY
     auth.set_mac_address(mac)
     
-    mqtt_server_ip = os.getenv("MQTT_SERVER_IP")
+    mqtt_server_ip = os.getenv("MQTT_SERVER")
 
     print(f"---------------------------------------------------------")
     print(f"EazyTrax Gateway")
     print(f"---------------------------------------------------------")
-    print(f"TOKEN: {os.getenv('TOKEN')}")
+    print(f"TOKEN: {os.getenv('ACCESS_TOKEN')}")
     print(f"PORT: {os.getenv('PORT')}")
     print(f"MAC: {gateway_mac}")
     print(f"IP: {ip}")
