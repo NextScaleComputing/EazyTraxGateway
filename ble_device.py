@@ -199,7 +199,11 @@ class BLEDevice:
             # Check for specific data formats (e.g., custom sensor data)
             if key == "0000ffe1-0000-1000-8000-00805f9b34fb" and value.hex().startswith("a101"):
                 self.update_battery(int(value.hex()[4:6], 16))
-                self.update_temperature(int(value.hex()[6:10], 16) / 256.0)
+                # Handle signed temperature value (support negative temperatures)
+                temp_raw = int(value.hex()[6:10], 16)
+                if temp_raw > 32767:  # Check if it's a negative value (2's complement for 16-bit)
+                    temp_raw = temp_raw - 65536
+                self.update_temperature(temp_raw / 256.0)
                 self.update_humidity(int(value.hex()[10:14], 16) / 256.0)
 
             if key == "0000ffe1-0000-1000-8000-00805f9b34fb" and value.hex().startswith("a701"):
@@ -214,7 +218,11 @@ class BLEDevice:
                     tvoc = int.from_bytes(payload[4:6])
                     pm25 = int.from_bytes(payload[6:8])
                     pm10 = int.from_bytes(payload[8:10])
-                    temperature = payload[10] + payload[11] / 100
+                    # Handle signed temperature value (support negative temperatures)
+                    temp_raw = payload[10]
+                    if temp_raw > 127:  # Check if it's a negative value (2's complement for 8-bit)
+                        temp_raw = temp_raw - 256
+                    temperature = temp_raw + payload[11] / 100
                     humidity = payload[12] + payload[13] / 100
 
                     self.update_co2(eco2)
@@ -248,7 +256,11 @@ class BLEDevice:
             elif  key == 1593:
                 hex_value = value.hex()
                 if hex_value.startswith("ca05"):
-                    self.update_temperature(int(hex_value[10:14], 16) / 256.0)
+                    # Handle signed temperature value (support negative temperatures)
+                    temp_raw = int(hex_value[10:14], 16)
+                    if temp_raw > 32767:  # Check if it's a negative value (2's complement for 16-bit)
+                        temp_raw = temp_raw - 65536
+                    self.update_temperature(temp_raw / 256.0)
                     self.update_humidity(int(hex_value[14:18], 16) / 256.0)
                 elif hex_value.startswith("ca00"):
                     self.update_battery(int(hex_value[16:18], 16))
