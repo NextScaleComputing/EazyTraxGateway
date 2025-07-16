@@ -254,11 +254,8 @@ class BLEDevice:
                     self.update_battery(int(hex_value[16:18], 16))
 
             else:
-                print(f">---------------------------------")
-                print(f"> process_manufacturer_data: {advertisement_data}")
-                print(f"> value: {value}")
-                print(f"> key: {key}")
-                print(f"> value.hex(): {value.hex()}")
+                # Process other manufacturer data silently
+                pass
 
     def debug_print(self, advertisement_data):
         """Prints debug information for the BLE device."""

@@ -257,18 +257,17 @@ def publish_each_device_to_mqtt(devices):
 async def scan_ble_devices():
     """Continuously scans for BLE devices with periodic pauses."""
     logging.info("Continuous BLE scanning started.")
-    filter_list = ["64","C3","AC"]
 
     def callback(device, advertisement_data):
        device.address = device.address.replace(":", "")
-       if any(device.address.startswith(prefix) for prefix in filter_list):
-           if device.address not in ble_devices_array:
-               ble_devices_array[device.address] = BLEDevice(device.address, device.name, advertisement_data.rssi)
-           else:
-               ble_devices_array[device.address].update(device.name, advertisement_data.rssi)
-           ble_devices_array[device.address].process_manufacturer_data(advertisement_data)
-           ble_devices_array[device.address].process_service_uuids(advertisement_data)
-           ble_devices_array[device.address].process_service_data(advertisement_data)
+       # Scan all BLE devices without filtering
+       if device.address not in ble_devices_array:
+           ble_devices_array[device.address] = BLEDevice(device.address, device.name, advertisement_data.rssi)
+       else:
+           ble_devices_array[device.address].update(device.name, advertisement_data.rssi)
+       ble_devices_array[device.address].process_manufacturer_data(advertisement_data)
+       ble_devices_array[device.address].process_service_uuids(advertisement_data)
+       ble_devices_array[device.address].process_service_data(advertisement_data)
 
     scanner = BleakScanner(callback)
 
